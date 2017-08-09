@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	<!-- 掃描指定package，如果有掃描到spring相關的類別，則註冊為spring bean -->
+	<context:component-scan base-package="basic.controller"></context:component-scan>
+	<!-- 自動註冊RequestMappingHandlerMapping、RequestMappingHandlerAdapter，支援@NumberFormatannotation、@DtaeTimeFormat、@Valid、XML與JSON讀寫 -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+	        <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+	        <bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
+	        <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+	    </mvc:message-converters>
+	</mvc:annotation-driven>
+	<!-- 使用javascript lib的時候必須引入，避免DispatcherServlet看成請求路徑時找不到回404 -->
+	<mvc:default-servlet-handler/>
+	<!-- 解析view(不指定的話會使用預設的) -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/WEB-INF/content/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+</beans>
