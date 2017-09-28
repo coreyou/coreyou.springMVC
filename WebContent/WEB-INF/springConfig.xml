@@ -3,6 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"  
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
@@ -20,6 +21,18 @@
 	        <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
 	    </mvc:message-converters>
 	</mvc:annotation-driven>
+	<!-- 自行定義的類別轉換器 -->
+	<mvc:annotation-driven conversion-service="conversionService"></mvc:annotation-driven>
+	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+		<property name="converters">
+			<list>
+				<bean class="basic.converter.StringToDateConverter">
+					<property name="datePattern" value="yyyy-MM-dd"></property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!-- end of 自行定義的類別轉換器 -->
 	<!-- 使用javascript lib的時候必須引入，避免DispatcherServlet看成請求路徑時找不到回404 -->
 	<mvc:default-servlet-handler/>
 	<!-- 解析view(不指定的話會使用預設的) -->
@@ -32,10 +45,16 @@
 		</property>
 	</bean>
 	<!-- 國際化 i18n -->
+	<mvc:interceptors>
+		<!-- 如果使用cookie或session的方式就必須使用此interceptor -->
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+	</mvc:interceptors>
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
 		<!-- 資源文件名稱 -->
-		<property name="basenames" value="messages">
-			
-		</property>
+		<property name="basenames" value="messages" />
 	</bean>
+	<!-- <bean id="localeResolver" class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver" /> -->
+	<!-- <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" /> -->
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" />
+	<!-- end of 國際化i18n -->
 </beans>

@@ -1,12 +1,19 @@
 package basic.model;
 
-public class User {
+import java.io.Serializable;
+import java.util.Date;
+
+public class User implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private String userName;
 	
 	private String password;
 	
 	private String ip;
+	
+	private Date birthday;
 	
 	public User() {
 		// TODO Auto-generated constructor stub
@@ -40,5 +47,13 @@ public class User {
 
 	public void setIp(String ip) {
 		this.ip = ip;
+	}
+
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
 	}
 }
